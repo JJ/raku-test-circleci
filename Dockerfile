@@ -1,10 +1,7 @@
-FROM jjmerelo/alpine-perl6:latest
-LABEL version="4.0.2" maintainer="JJ Merelo <jjmerelo@GMail.com>"
+FROM jjmerelo/test-perl6:latest
+LABEL version="1.0" maintainer="JJ Merelo <jjmerelo@GMail.com>"
 
-# Set up dirs
-RUN mkdir /test
-VOLUME /test
-WORKDIR /test
+RUN apk add --upgrade openssh-client
 
 
 # Will run this

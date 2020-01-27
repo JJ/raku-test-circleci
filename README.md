@@ -1,22 +1,22 @@
-# A docker container to test Perl 6 applications [![Build Status](https://travis-ci.org/JJ/test-perl6.svg?branch=master)](https://travis-ci.org/JJ/test-perl6)
+# A docker container to test Raku applications in CircleCI [![Build Status](https://travis-ci.org/JJ/raku-test-circleci.svg?branch=master)](https://travis-ci.org/JJ/raku-test-circleci)
 
-`jjmerelo/test-perl6` is a a Docker container with Perl 6 for testing
+`jjmerelo/raku-test-circleci` is a a Docker container with Raku for testing
 and continuous integration, mainly for use in Travis and other CI
 environments. This image should be automatically built and available
-at the [Docker Hub](https://hub.docker.com/r/jjmerelo/test-perl6/). It
-depends on the [Alpine Perl 6 image](https://hub.docker.com/r/jjmerelo/alpine-perl6/), which is a
-Perl 6 interpreter based on the lightweight Alpine distribution.
+at the [Docker Hub](https://hub.docker.com/r/jjmerelo/raku-test-circleci/). It
+depends on the [Alpine Raku image](https://hub.docker.com/r/jjmerelo/alpine-perl6/), which is a
+Raku interpreter based on the lightweight Alpine distribution. This version is exactly the same as `jjmerelo/test-perl6` except it also includes ssh.
 
 This Dockerfile
-is [hosted in GitHub](https://github.com/JJ/test-perl6). It will be
+is [hosted in GitHub](https://github.com/JJ/raku-test-circleci). It will be
 automatically rebuilt every time a new version of the alpine-perl6
 image is pushed. Please raise an issue if there's any problem with it.
 
 ## Local use
 
-After the usual `docker pull jjmerelo/test-perl6` type
+After the usual `docker pull jjmerelo/raku-test-circleci` type
 
-    docker run -t -v /path/to/module-dir:/test jjmerelo/test-perl6 
+    docker run -t -v /path/to/module-dir:/test jjmerelo/raku-test-circleci 
 
 The local `module-dir` gets mapped to the container's `/test` directory,
 and tests are run using the usual `prove` or whatever method is
@@ -25,7 +25,7 @@ dependencies.
 
 You can also do:
 
-    docker run -t -v  $PWD:/test jjmerelo/test-perl6
+    docker run -t -v  $PWD:/test jjmerelo/raku-test-circleci
 
 (Use `sudo` in front of `docker` if your local setup needs it).
 
@@ -43,10 +43,10 @@ services:
   - docker
 
 install:
-  - docker pull jjmerelo/test-perl6
+  - docker pull jjmerelo/raku-test-circleci
   - docker images
 
-script: docker run -t -v  $TRAVIS_BUILD_DIR:/test jjmerelo/test-perl6
+script: docker run -t -v  $TRAVIS_BUILD_DIR:/test jjmerelo/raku-test-circleci
 ~~~
 
 `docker images` is not needed, but it will show you the version it is
@@ -66,7 +66,7 @@ in this container. For instance, many modules use `openssl-dev`. In
 that case, you'll have to use this as the testing script:
 
     script:  docker run -t  --entrypoint="/bin/sh" \
-      -v  $TRAVIS_BUILD_DIR:/test \jjmerelo/test-perl6\
+      -v  $TRAVIS_BUILD_DIR:/test \jjmerelo/raku-test-circleci\
       -c "apk add --update --no-cache openssl-dev make \
       build-base && zef install --deps-only . && zef test ."
 
@@ -82,7 +82,7 @@ Underneath, zef uses `prove6`. You can use it directly if you don't
 have a `META6.json` file.
 
     script:  docker run -t  --entrypoint="/bin/sh" \
-      -v  $TRAVIS_BUILD_DIR:/test \jjmerelo/test-perl6\
+      -v  $TRAVIS_BUILD_DIR:/test \jjmerelo/raku-test-circleci\
       -c "prove6 --lib"
 
 (if there are no dependencies involved)
@@ -91,5 +91,5 @@ have a `META6.json` file.
 
 [The `perl6-test-openssl` container](https://cloud.docker.com/u/jjmerelo/repository/docker/jjmerelo/perl6-test-openssl),
 which already includes OpenSSL, one of the most depended-upon modules
-in the Perl 6 ecosystem. Use that one if it's in one of your
+in the Raku ecosystem. Use that one if it's in one of your
 dependencies. 
