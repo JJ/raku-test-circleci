@@ -9,7 +9,7 @@ Raku interpreter based on the lightweight Alpine distribution. This version is e
 
 This Dockerfile
 is [hosted in GitHub](https://github.com/JJ/raku-test-circleci). It will be
-automatically rebuilt every time a new version of the alpine-perl6
+automatically rebuilt every time a new version of the `test-perl6`
 image is pushed. Please raise an issue if there's any problem with it.
 
 ## Local use
@@ -29,38 +29,30 @@ You can also do:
 
 (Use `sudo` in front of `docker` if your local setup needs it).
 
-## Use in Travis
+## Use in CircleCI
 
-Check out
-[this `.travis.yml` as an example](https://github.com/JJ/perl6-Math-Sequences/blob/master/.travis.yml). A
-generic one should go more or less like this
+Add something like this to your config.yml file within the .circleci directory:
 
-~~~
-language:
-  - minimal
+```
+version: 2
+jobs:
+  test-linux:
+    docker:
+      - image: jjmerelo/test-perl6
+    steps:
+      - checkout
+      - run:
+          name: Test Perl6-Documentable
+          command: |
+            zef update
+            zef install .
+```
 
-services:
-  - docker
-
-install:
-  - docker pull jjmerelo/raku-test-circleci
-  - docker images
-
-script: docker run -t -v  $TRAVIS_BUILD_DIR:/test jjmerelo/raku-test-circleci
-~~~
-
-`docker images` is not needed, but it will show you the version it is
-going to use for building. 
-
-The base image of this container
-is [Alpine Linux](https://alpinelinux.org), so any library the module
-needs to install will have to be installed in this distro.
-
-In general, the container will install all dependencies for you, but you
+In general, the container will install all Raku dependencies for you, but you
 might want to do it separately to check for failing dependencies, for
 instance.
 
-If yo need to install non-Perl dependencies, remember that you are
+If you need to install non-Perl dependencies, remember that you are
 going to be using [Alpine Linux](https://alpinelinux.org/) underneath
 in this container. For instance, many modules use `openssl-dev`. In
 that case, you'll have to use this as the testing script:
