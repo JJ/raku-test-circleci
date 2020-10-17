@@ -5,11 +5,11 @@ and continuous integration, mainly for use in Travis and other CI
 environments. This image should be automatically built and available
 at the [Docker Hub](https://hub.docker.com/r/jjmerelo/raku-test-circleci/). It
 depends on the [Alpine Raku image](https://hub.docker.com/r/jjmerelo/alpine-perl6/), which is a
-Raku interpreter based on the lightweight Alpine distribution. This version is exactly the same as `jjmerelo/test-perl6` except it also includes ssh.
+Raku interpreter based on the lightweight Alpine distribution. This version is exactly the same as `jjmerelo/raku-test` except it also includes `ssh`.
 
 This Dockerfile
 is [hosted in GitHub](https://github.com/JJ/raku-test-circleci). It will be
-automatically rebuilt every time a new version of the `test-perl6`
+automatically rebuilt every time a new version of the `raku-test`
 image is pushed. Please raise an issue if there's any problem with it.
 
 ## Local use
@@ -38,11 +38,11 @@ version: 2
 jobs:
   test-linux:
     docker:
-      - image: jjmerelo/test-perl6
+      - image: jjmerelo/raku-test-circleci
     steps:
       - checkout
       - run:
-          name: Test Perl6-Documentable
+          name: Test Documentable
           command: |
             zef update
             zef install .
@@ -52,7 +52,7 @@ In general, the container will install all Raku dependencies for you, but you
 might want to do it separately to check for failing dependencies, for
 instance.
 
-If you need to install non-Perl dependencies, remember that you are
+If you need to install non-Raku dependencies, remember that you are
 going to be using [Alpine Linux](https://alpinelinux.org/) underneath
 in this container. For instance, many modules use `openssl-dev`. In
 that case, you'll have to use this as the testing script:
@@ -70,8 +70,8 @@ Alpine. Pretty much everything is in
 there. Use [the package search site](https://pkgs.alpinelinux.org/) to
 look for the name of the package that is included in your dependencies.
 
-Underneath, zef uses `prove6`. You can use it directly if you don't
-have a `META6.json` file.
+Underneath, zef uses `prove6` or any other testing framework that is
+available. You can use it directly if you don't have a `META6.json` file.
 
     script:  docker run -t  --entrypoint="/bin/sh" \
       -v  $TRAVIS_BUILD_DIR:/test \jjmerelo/raku-test-circleci\
@@ -81,7 +81,7 @@ have a `META6.json` file.
 
 ## See also
 
-[The `perl6-test-openssl` container](https://cloud.docker.com/u/jjmerelo/repository/docker/jjmerelo/perl6-test-openssl),
+[The `raku-test-openssl` container](https://cloud.docker.com/u/jjmerelo/repository/docker/jjmerelo/raku-test-openssl),
 which already includes OpenSSL, one of the most depended-upon modules
 in the Raku ecosystem. Use that one if it's in one of your
-dependencies. 
+dependencies.
