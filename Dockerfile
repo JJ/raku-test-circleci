@@ -1,8 +1,11 @@
 FROM jjmerelo/raku-test:latest
 LABEL version="2.0" maintainer="JJ Merelo <jjmerelo@GMail.com>"
 
-RUN apk add --upgrade openssh-client \
-    && zef install License::SPDX
+USER root
+RUN apk add --upgrade openssh-client
+
+USER raku
+RUN zef install License::SPDX
 
 
 # Will run this
